@@ -1,7 +1,14 @@
 const express = require('express');
 const app = express();
 const axios = require('axios');
+const cors = require ('cors');
 const config = require('./config');
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 
 app.get('/news/latest', (_, res) => {
     axios.get(config.NEWS_API_LATEST_NEWS_URL).then(latestNews => {

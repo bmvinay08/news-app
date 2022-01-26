@@ -1,17 +1,45 @@
-import { Navbar, Container, Form, FormControl, Button } from "react-bootstrap";
-import NewsCards from "./NewsCards";
+import React, {useState, useEffect} from 'react';
+import { Navbar, Container, Form, FormControl, Button } from 'react-bootstrap';
+import axios from 'axios';
+import NewsCards from './NewsCards';
+import config from './config.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/common.scss';
 import './styles/app.scss';
 
 function App() {
+    const [isGettingLatestNews, setIsGettingLatestNews] = useState(false);
+    const [newsArticles, setNewsArticles] = useState([]);
+    const [getNewsErr, setNewsErr] = useState(null);
     const getCurrentDate = () => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const date = new Date();
         return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
     };
+    const getLatestNews = () => {
+        setIsGettingLatestNews(true);
+        setNewsArticles([]);
+        setNewsErr(null);
+        axios.get(`${config.API_URL}/news/latest`).then(latestNews => {
+            if (latestNews && latestNews.data && latestNews.data.articles && Array.isArray(latestNews.data.articles)) {
+                setIsGettingLatestNews(false);
+                setNewsArticles(latestNews.data.articles);
+            } else {
+                setIsGettingLatestNews(false);
+                setNewsArticles([]);
+                setNewsErr('No news articles found!');
+            }
+        }).catch(err => {
+            setIsGettingLatestNews(false);
+            setNewsArticles([]);
+            setNewsErr(err);
+        });
+    };
+    useEffect(() => {
+        getLatestNews();
+    }, []);
     return (
         <div className="news-app-container">
             <Navbar bg="dark" variant="dark" expand="lg" className="top-navbar">
@@ -37,8 +65,20 @@ function App() {
                 </Container>
             </Navbar>
             <Container fluid className="main-content">
-                <h6 className="text-center bold mt-2 mb-2">LATEST NEWS</h6>
-                <NewsCards />
+                {getNewsErr && (
+                    <div>{getNewsErr}</div>
+                )}
+                {!getNewsErr && isGettingLatestNews && (
+                    <div>Getting Latest News ...</div>
+                )}
+                {!getNewsErr && !isGettingLatestNews && newsArticles && (
+                    <>
+                        <h6 className="text-center bold mt-4 mb-4">LATEST NEWS</h6>
+                        <NewsCards {...{
+                            newsArticles: newsArticles
+                        }} />
+                    </>
+                )}
             </Container>
         </div>
     );

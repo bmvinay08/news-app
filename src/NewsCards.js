@@ -1,24 +1,26 @@
+import React from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
 
-function NewsCards() {
+function NewsCards(props) {
     return (
         <div className="news-cards">
             <Row xs={1} sm={2} md={4} lg={6} className="g-4">
-                {Array.from({ length: 4 }).map((_, idx) => (
+                {props.newsArticles.map((article, idx) => (
                     <Col key={idx}>
                         <Card>
-                            <Card.Img variant="top" src="https://www.thesun.co.uk/wp-content/uploads/2022/01/Transfer-News-Template-72-1.jpg?strip=all&quality=100&w=1200&h=800&crop=1" />
+                            {article.urlToImage && (
+                                <Card.Img variant="top" src={article.urlToImage} />
+                            )}
                             <Card.Body>
-                                <Card.Title>Card title</Card.Title>
-                                <Card.Text>
-                                    This is a longer card with supporting text below as a natural
-                                    lead-in to additional content. This content is a little bit longer.
-                                </Card.Text>
+                                <Card.Title className="bold">{article.title}</Card.Title>
+                                {article.description && (
+                                    <Card.Title>{article.description}</Card.Title>
+                                )}
+                                <Card.Text>{article.content}</Card.Text>
                                 <footer className="blockquote-footer">
-                                    Someone famous in <cite title="Source Title">Source Title</cite>
+                                    <cite title="Source Title">{article.author}</cite>
                                 </footer>
-                                <Card.Text className="text-muted">The Guardian</Card.Text>
-                                <Card.Text className="text-muted">2022-01-26T04:37:00Z</Card.Text>
+                                <Card.Text className="text-muted">{article.publishedAt}</Card.Text>
                             </Card.Body>
                         </Card>
                     </Col>
