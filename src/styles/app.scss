@@ -5,9 +5,12 @@
             font-size: 14px;
         }
     }
+    .sub-header {
+        background-color: #D3D3D3;
+    }
     .main-content {
         background-color: #f6f6f6;
-        height: calc(100vh - 56px);
+        height: calc(100vh - 90px);
         overflow-y: auto;
     }
 }

@@ -4,7 +4,7 @@ import { Row, Col, Card } from 'react-bootstrap';
 function NewsCards(props) {
     return (
         <div className="news-cards">
-            <Row xs={1} sm={2} md={4} lg={6} className="g-4">
+            <Row xs={1} sm={2} md={3} lg={4} className="g-4">
                 {props.newsArticles.map((article, idx) => (
                     <Col key={idx}>
                         <Card>
@@ -16,11 +16,17 @@ function NewsCards(props) {
                                 {article.description && (
                                     <Card.Title>{article.description}</Card.Title>
                                 )}
-                                <Card.Text>{article.content}</Card.Text>
-                                <footer className="blockquote-footer">
-                                    <cite title="Source Title">{article.author}</cite>
-                                </footer>
-                                <Card.Text className="text-muted">{article.publishedAt}</Card.Text>
+                                {article.content && (
+                                    <Card.Text>{article.content}</Card.Text>
+                                )}
+                                {article.author && (
+                                    <footer className="blockquote-footer">
+                                        <cite title="Source Title">{article.author}</cite>
+                                    </footer>
+                                )}
+                                {article.publishedAt && (
+                                    <Card.Text className="text-muted">{article.publishedAt}</Card.Text>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>

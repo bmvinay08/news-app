@@ -64,6 +64,7 @@ function App() {
                     </Form>
                 </Container>
             </Navbar>
+            <Container fluid className="sub-header text-center p-1 bold">LATEST NEWS</Container>
             <Container fluid className="main-content">
                 {getNewsErr && (
                     <div>{getNewsErr}</div>
@@ -72,12 +73,9 @@ function App() {
                     <div>Getting Latest News ...</div>
                 )}
                 {!getNewsErr && !isGettingLatestNews && newsArticles && (
-                    <>
-                        <h6 className="text-center bold mt-4 mb-4">LATEST NEWS</h6>
-                        <NewsCards {...{
-                            newsArticles: newsArticles
-                        }} />
-                    </>
+                    <NewsCards {...{
+                        newsArticles: newsArticles
+                    }} />
                 )}
             </Container>
         </div>
