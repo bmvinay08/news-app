@@ -13,6 +13,10 @@ function App() {
     const [isGettingLatestNews, setIsGettingLatestNews] = useState(false);
     const [newsArticles, setNewsArticles] = useState([]);
     const [getNewsErr, setNewsErr] = useState(null);
+    const [searchTxt, setSearchTxt] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
+    const [isShowSearchResult, setIsShowSearchResult] = useState(false);
+    const [searchResultLength, setSearchResultLength] = useState(0);
     const getLatestNews = () => {
         setIsGettingLatestNews(true);
         setNewsArticles([]);
@@ -32,6 +36,34 @@ function App() {
             setNewsErr(err);
         });
     };
+    const search = e => {
+        e.preventDefault();
+        setIsSearching(true);
+        setNewsArticles([]);
+        setNewsErr(null);
+        setIsShowSearchResult(false);
+        setSearchResultLength(0);
+        axios.get(`${config.API_URL}/news/search?searchText=${searchTxt}`).then(searchResult => {
+            if (searchResult && searchResult.data && searchResult.data.articles && Array.isArray(searchResult.data.articles)) {
+                setIsSearching(false);
+                setIsShowSearchResult(true);
+                setNewsArticles(searchResult.data.articles);
+                setSearchResultLength(searchResult.data.totalResults);
+            } else {
+                setIsSearching(false);
+                setNewsArticles([]);
+                setIsShowSearchResult(true);
+                setNewsErr('No news articles found!');
+                setSearchResultLength(0);
+            }
+        }).catch(err => {
+            setIsSearching(false);
+            setNewsArticles([]);
+            setIsShowSearchResult(true);
+            setNewsErr(err);
+            setSearchResultLength(0);
+        });
+    };
     useEffect(() => {
         getLatestNews();
     }, []);
@@ -43,34 +75,44 @@ function App() {
                         <span className="bold">UK News</span>
                         <small className="date">{formatDate(new Date())}</small>
                     </Navbar.Brand>
-                    <Form className="d-flex">
+                    <Form className="d-flex" onSubmit={e => search(e)}>
                         <FormControl
                             type="search"
                             placeholder="Search News"
                             className="me-2"
                             aria-label="Search"
+                            value={searchTxt}
+                            onChange={e => setSearchTxt(e.target.value)}
+                            required
+                            disabled={isSearching}
                         />
                         <Button
                             variant="outline-success"
                             className="custom-button white"
+                            type="submit"
+                            disabled={isSearching}
                         >
                             Search
                         </Button>
                     </Form>
                 </Container>
             </Navbar>
-            <Container fluid className="sub-header text-center p-1 bold">LATEST NEWS</Container>
+            <Container fluid className="sub-header text-center p-1 bold">
+                {!isShowSearchResult && !isSearching && 'LATEST NEWS'}
+                {!isShowSearchResult && isSearching && 'Searching ...'}
+                {isShowSearchResult && !isSearching && `Found ${searchResultLength.toLocaleString()} search results`}
+            </Container>
             <Container fluid className="main-content pt-3">
                 {getNewsErr && (
                     <div className="text-center">{getNewsErr}</div>
                 )}
-                {!getNewsErr && isGettingLatestNews && (
+                {!getNewsErr && (isGettingLatestNews || isSearching) && (
                     <div className="text-center">
                         <Spinner animation="border" variant="dark" size="sm" />
                         <span className="ml-4">Fetching news articles ...</span>
                     </div>
                 )}
-                {!getNewsErr && !isGettingLatestNews && newsArticles && (
+                {!getNewsErr && !isGettingLatestNews && !isSearching && newsArticles && (
                     <NewsCards {...{
                         newsArticles: newsArticles
                     }} />
