@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
+import {formatDate} from './util.js';
 
 function NewsCards(props) {
     return (
@@ -14,18 +15,20 @@ function NewsCards(props) {
                             <Card.Body>
                                 <Card.Title className="bold">{article.title}</Card.Title>
                                 {article.description && (
-                                    <Card.Title>{article.description}</Card.Title>
+                                    <small className="text-muted">{article.description}</small>
                                 )}
                                 {article.content && (
-                                    <Card.Text>{article.content}</Card.Text>
+                                    <Card.Text className="mt-2">{article.content}</Card.Text>
                                 )}
                                 {article.author && (
-                                    <footer className="blockquote-footer">
-                                        <cite title="Source Title">{article.author}</cite>
-                                    </footer>
+                                    <div className="text-right mt-2">
+                                        <cite title="Source Title" className="blockquote-footer">{article.author}</cite>
+                                    </div>
                                 )}
                                 {article.publishedAt && (
-                                    <Card.Text className="text-muted">{article.publishedAt}</Card.Text>
+                                    <div className="text-right">
+                                        <small className="text-muted">{formatDate(new Date(article.publishedAt), true)}</small>
+                                    </div>
                                 )}
                             </Card.Body>
                         </Card>

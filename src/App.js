@@ -3,6 +3,7 @@ import { Navbar, Container, Form, FormControl, Button, Spinner } from 'react-boo
 import axios from 'axios';
 import NewsCards from './NewsCards';
 import config from './config.js';
+import {formatDate} from './util.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/common.scss';
@@ -12,12 +13,6 @@ function App() {
     const [isGettingLatestNews, setIsGettingLatestNews] = useState(false);
     const [newsArticles, setNewsArticles] = useState([]);
     const [getNewsErr, setNewsErr] = useState(null);
-    const getCurrentDate = () => {
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const date = new Date();
-        return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-    };
     const getLatestNews = () => {
         setIsGettingLatestNews(true);
         setNewsArticles([]);
@@ -46,7 +41,7 @@ function App() {
                 <Container fluid>
                     <Navbar.Brand href="#">
                         <span className="bold">UK News</span>
-                        <small className="date">{getCurrentDate()}</small>
+                        <small className="date">{formatDate(new Date())}</small>
                     </Navbar.Brand>
                     <Form className="d-flex">
                         <FormControl
