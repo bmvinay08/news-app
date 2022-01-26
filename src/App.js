@@ -34,35 +34,44 @@ function App() {
         }).catch(err => {
             setIsGettingLatestNews(false);
             setNewsArticles([]);
-            setNewsErr(err);
+            setNewsErr(err.response.data);
         });
     };
-    const search = e => {
-        e.preventDefault();
+    const search = (e, isNextPrevPage) => {
+        if (!isNextPrevPage) {
+            e && e.preventDefault();
+            setIsShowSearchResult(false);
+            setSearchResultLength(0);
+            setSearchResultPage(1)
+        }
         setIsSearching(true);
         setNewsArticles([]);
         setNewsErr(null);
-        setIsShowSearchResult(false);
-        setSearchResultLength(0);
         axios.get(`${config.API_URL}/news/search?searchText=${searchTxt}&page=${searchResultPage}`).then(searchResult => {
             if (searchResult && searchResult.data && searchResult.data.articles && Array.isArray(searchResult.data.articles)) {
                 setIsSearching(false);
                 setIsShowSearchResult(true);
                 setNewsArticles(searchResult.data.articles);
-                setSearchResultLength(searchResult.data.totalResults);
+                if (!isNextPrevPage) {
+                    setSearchResultLength(searchResult.data.totalResults);
+                }
             } else {
                 setIsSearching(false);
                 setNewsArticles([]);
                 setIsShowSearchResult(true);
                 setNewsErr('No news articles found!');
-                setSearchResultLength(0);
+                if (!isNextPrevPage) {
+                    setSearchResultLength(0);
+                }
             }
         }).catch(err => {
             setIsSearching(false);
             setNewsArticles([]);
             setIsShowSearchResult(true);
-            setNewsErr(err);
-            setSearchResultLength(0);
+            setNewsErr(err.response.data);
+            if (!isNextPrevPage) {
+                setSearchResultLength(0);
+            }
         });
     };
     useEffect(() => {
@@ -73,7 +82,7 @@ function App() {
             <Navbar bg="dark" variant="dark" expand="lg" className="top-navbar">
                 <Container fluid>
                     <Navbar.Brand href="#">
-                        <span className="bold">UK News</span>
+                        <span className="bold">The News</span>
                         <small className="date">{formatDate(new Date())}</small>
                     </Navbar.Brand>
                     <Form className="d-flex" onSubmit={e => search(e)}>
@@ -99,20 +108,60 @@ function App() {
                 </Container>
             </Navbar>
             <Container fluid className="sub-header text-center p-1 bold">
-                {!isShowSearchResult && !isSearching && 'LATEST NEWS'}
+                {!isShowSearchResult && !isSearching && 'LATEST NEWS FROM UK'}
                 {!isShowSearchResult && isSearching && 'Searching ...'}
-                {isShowSearchResult && !isSearching && (
+                {((isShowSearchResult && !isSearching) || (isShowSearchResult && isSearching)) && (
                     <Row>
                         <Col xs={2} sm={2} md={2} lg={2} className="text-left">
-                            <Button variant="link" className="p-0 ml-10 custom-button black">{'<< First'}</Button>
-                            <Button variant="link" className="p-0 ml-10 custom-button black">{'< Previous'}</Button>
+                            <Button
+                                variant="link"
+                                className="p-0 ml-10 custom-button black"
+                                disabled={(searchResultPage === 1) || isSearching}
+                                onClick={() => {
+                                    setSearchResultPage(1);
+                                    search(null, true);
+                                }}
+                            >
+                                {'<< First'}
+                            </Button>
+                            <Button
+                                variant="link"
+                                className="p-0 ml-10 custom-button black"
+                                disabled={(searchResultPage === 1) || isSearching}
+                                onClick={() => {
+                                    setSearchResultPage(page => page - 1);
+                                    search(null, true);
+                                }}
+                            >
+                                {'< Previous'}
+                            </Button>
                         </Col>
                         <Col xs={8} sm={8} md={8} lg={8}>
-                            {`Found ${searchResultLength.toLocaleString()} search results | Page ${searchResultPage} of ${Math.floor(searchResultLength / 50).toLocaleString()}`}
+                            {`Found ${searchResultLength.toLocaleString()} search results | Page ${searchResultPage.toLocaleString()} of ${Math.floor(searchResultLength / 50).toLocaleString()}`}
                         </Col>
                         <Col xs={2} sm={2} md={2} lg={2} className="text-right">
-                            <Button variant="link" className="p-0 mr-10 custom-button black">{'Next >'}</Button>
-                            <Button variant="link" className="p-0 mr-10 custom-button black">{'Last >>'}</Button>
+                            <Button
+                                variant="link"
+                                className="p-0 mr-10 custom-button black"
+                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching}
+                                onClick={() => {
+                                    setSearchResultPage(page => page + 1);
+                                    search(null, true);
+                                }}
+                            >
+                                {'Next >'}
+                            </Button>
+                            <Button
+                                variant="link"
+                                className="p-0 mr-10 custom-button black"
+                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching}
+                                onClick={() => {
+                                    setSearchResultPage(Math.floor(searchResultLength / 50));
+                                    search(null, true);
+                                }}
+                            >
+                                {'Last >>'}
+                            </Button>
                         </Col>
                     </Row>
                 )}

@@ -15,7 +15,7 @@ app.get('/news/latest', (_, res) => {
         res.send(latestNews.data);
     }).catch(err => {
         console.log(err);
-        res.status(500).send('An error occured getting latest news');
+        res.status(500).send(`An error occured getting latest news: ${err.message}`);
     });
 });
 
@@ -24,7 +24,7 @@ app.get('/news/search', (req, res) => {
         res.send(latestNews.data);
     }).catch(err => {
         console.log(err);
-        res.status(500).send('An error occured searching news');
+        res.status(500).send(`An error occured searching news: ${err.message}`);
     });
 });
 
