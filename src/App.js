@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Navbar, Container, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Container, Form, FormControl, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import NewsCards from './NewsCards';
 import config from './config.js';
@@ -65,12 +65,15 @@ function App() {
                 </Container>
             </Navbar>
             <Container fluid className="sub-header text-center p-1 bold">LATEST NEWS</Container>
-            <Container fluid className="main-content">
+            <Container fluid className="main-content pt-3">
                 {getNewsErr && (
-                    <div>{getNewsErr}</div>
+                    <div className="text-center">{getNewsErr}</div>
                 )}
                 {!getNewsErr && isGettingLatestNews && (
-                    <div>Getting Latest News ...</div>
+                    <div className="text-center">
+                        <Spinner animation="border" variant="dark" size="sm" />
+                        <span className="ml-4">Fetching news articles ...</span>
+                    </div>
                 )}
                 {!getNewsErr && !isGettingLatestNews && newsArticles && (
                     <NewsCards {...{
