@@ -17,6 +17,7 @@ function App() {
     const [isSearching, setIsSearching] = useState(false);
     const [isShowSearchResult, setIsShowSearchResult] = useState(false);
     const [searchResultLength, setSearchResultLength] = useState(0);
+    const [searchResultPage, setSearchResultPage] = useState(1);
     const getLatestNews = () => {
         setIsGettingLatestNews(true);
         setNewsArticles([]);
@@ -43,7 +44,7 @@ function App() {
         setNewsErr(null);
         setIsShowSearchResult(false);
         setSearchResultLength(0);
-        axios.get(`${config.API_URL}/news/search?searchText=${searchTxt}`).then(searchResult => {
+        axios.get(`${config.API_URL}/news/search?searchText=${searchTxt}&page=${searchResultPage}`).then(searchResult => {
             if (searchResult && searchResult.data && searchResult.data.articles && Array.isArray(searchResult.data.articles)) {
                 setIsSearching(false);
                 setIsShowSearchResult(true);
@@ -100,7 +101,7 @@ function App() {
             <Container fluid className="sub-header text-center p-1 bold">
                 {!isShowSearchResult && !isSearching && 'LATEST NEWS'}
                 {!isShowSearchResult && isSearching && 'Searching ...'}
-                {isShowSearchResult && !isSearching && `Found ${searchResultLength.toLocaleString()} search results`}
+                {isShowSearchResult && !isSearching && `Found ${searchResultLength.toLocaleString()} search results | Page ${searchResultPage} of ${Math.floor(searchResultLength / 50).toLocaleString()}`}
             </Container>
             <Container fluid className="main-content pt-3">
                 {getNewsErr && (

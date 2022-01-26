@@ -20,7 +20,7 @@ app.get('/news/latest', (_, res) => {
 });
 
 app.get('/news/search', (req, res) => {
-    axios.get(`${config.NEWS_API_SEARCH_URL}&q=${req.query.searchText}`).then(latestNews => {
+    axios.get(`${config.NEWS_API_SEARCH_URL}&q=${req.query.searchText}&page=${req.query.page}`).then(latestNews => {
         res.send(latestNews.data);
     }).catch(err => {
         console.log(err);

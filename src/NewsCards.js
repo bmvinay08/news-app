@@ -15,7 +15,7 @@ function NewsCards(props) {
                     <Col key={idx} className="article-card-col">
                         <Card className="article-card height-100pc shadow" onClick={() => gotoUrl(article.url)}>
                             {article.urlToImage && (
-                                <Card.Img variant="top" src={article.urlToImage} />
+                                <Card.Img variant="top" src={article.urlToImage} alt="News image" />
                             )}
                             <Card.Body>
                                 <Card.Title className="bold">{article.title}</Card.Title>
