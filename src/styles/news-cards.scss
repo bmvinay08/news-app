@@ -1,0 +1,10 @@
+.news-cards {
+    .article-card-col {
+        padding: 10px 10px 5px 5px;
+        margin-top: 0px;
+    }
+    .article-card:hover {
+        cursor: pointer;
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+    }
+}
