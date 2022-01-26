@@ -14,9 +14,21 @@ $dark: #212529;
     border-color: #ffffff;
 }
 
-.custom-button.white:active, .custom-button.white:hover, .custom-button.white:focus {
+.custom-button.white:active, .custom-button.white:hover, .custom-button.white:focus, .custom-button.black:focus {
     background-color: inherit;
     box-shadow: none;
+}
+
+.custom-button.black {
+    color: $dark;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
 }
 
 .ml-4 {
@@ -29,4 +41,8 @@ $dark: #212529;
 
 .height-100pc {
     height: 100%;
+}
+
+.text-left {
+    text-align: left;
 }

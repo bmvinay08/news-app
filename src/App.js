@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Navbar, Container, Form, FormControl, Button, Spinner } from 'react-bootstrap';
+import { Navbar, Container, Form, FormControl, Button, Spinner, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import NewsCards from './NewsCards';
 import config from './config.js';
@@ -101,7 +101,21 @@ function App() {
             <Container fluid className="sub-header text-center p-1 bold">
                 {!isShowSearchResult && !isSearching && 'LATEST NEWS'}
                 {!isShowSearchResult && isSearching && 'Searching ...'}
-                {isShowSearchResult && !isSearching && `Found ${searchResultLength.toLocaleString()} search results | Page ${searchResultPage} of ${Math.floor(searchResultLength / 50).toLocaleString()}`}
+                {isShowSearchResult && !isSearching && (
+                    <Row>
+                        <Col xs={2} sm={2} md={2} lg={2} className="text-left">
+                            <Button variant="link" className="p-0 ml-10 custom-button black">{'<< First'}</Button>
+                            <Button variant="link" className="p-0 ml-10 custom-button black">{'< Previous'}</Button>
+                        </Col>
+                        <Col xs={8} sm={8} md={8} lg={8}>
+                            {`Found ${searchResultLength.toLocaleString()} search results | Page ${searchResultPage} of ${Math.floor(searchResultLength / 50).toLocaleString()}`}
+                        </Col>
+                        <Col xs={2} sm={2} md={2} lg={2} className="text-right">
+                            <Button variant="link" className="p-0 mr-10 custom-button black">{'Next >'}</Button>
+                            <Button variant="link" className="p-0 mr-10 custom-button black">{'Last >>'}</Button>
+                        </Col>
+                    </Row>
+                )}
             </Container>
             <Container fluid className="main-content pt-3">
                 {getNewsErr && (
