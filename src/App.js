@@ -35,6 +35,7 @@ function App() {
                     </Form>
                 </Container>
             </Navbar>
+            <Container fluid className="main-content">Content</Container>
         </div>
     );
 }
