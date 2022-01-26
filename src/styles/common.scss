@@ -1,3 +1,20 @@
+$dark: #212529;
+
 .bold {
     font-weight: bold;
+}
+
+.form-control:focus {
+    border-color: $dark;
+    box-shadow: none;
+}
+
+.custom-button.white {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.custom-button.white:active, .custom-button.white:hover, .custom-button.white:focus {
+    background-color: inherit;
+    box-shadow: none;
 }
