@@ -1,4 +1,5 @@
 import { Navbar, Container, Form, FormControl, Button } from "react-bootstrap";
+import NewsCards from "./NewsCards";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/common.scss';
@@ -35,7 +36,10 @@ function App() {
                     </Form>
                 </Container>
             </Navbar>
-            <Container fluid className="main-content">Content</Container>
+            <Container fluid className="main-content">
+                <h6 className="text-center bold mt-2 mb-2">LATEST NEWS</h6>
+                <NewsCards />
+            </Container>
         </div>
     );
 }
