@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Navbar, Container, Form, FormControl, Button, Spinner, Row, Col } from 'react-bootstrap';
+import { Navbar, Container, Form, FormControl, Button, Spinner, Row, Col, Nav } from 'react-bootstrap';
 import axios from 'axios';
 import NewsCards from './NewsCards';
 import config from './config.js';
@@ -36,6 +36,16 @@ function App() {
             setNewsArticles([]);
             setNewsErr(err.response.data);
         });
+    };
+    const goToHome = () => {
+        setIsGettingLatestNews(false);
+        setNewsArticles([]);
+        setNewsErr(null);
+        setIsSearching(false);
+        setIsShowSearchResult(false);
+        setSearchResultLength(0);
+        setSearchResultPage(1);
+        getLatestNews();
     };
     const search = (e, page, isNextPrevPage) => {
         if (!isNextPrevPage) {
@@ -84,10 +94,21 @@ function App() {
         <div className="news-app-container">
             <Navbar bg="dark" variant="dark" expand="lg" className="top-navbar">
                 <Container fluid>
-                    <Navbar.Brand href="#">
+                    <Navbar.Brand href="#" onClick={e => {
+                        e.preventDefault();
+                        goToHome();
+                    }}>
                         <span className="bold">The News</span>
                         <small className="date">{formatDate(new Date())}</small>
                     </Navbar.Brand>
+                    <Nav className="me-auto">
+                        <Nav.Link href="#" onClick={e => {
+                        e.preventDefault();
+                        goToHome();
+                    }}>
+                        Home
+                    </Nav.Link>
+                    </Nav>
                     <Form className="d-flex" onSubmit={e => search(e, 1)}>
                         <FormControl
                             type="search"
@@ -119,7 +140,7 @@ function App() {
                             <Button
                                 variant="link"
                                 className="p-0 ml-10 custom-button black"
-                                disabled={(searchResultPage === 1) || isSearching || (searchResultLength === 0)}
+                                disabled={(searchResultPage === 1) || isSearching || (searchResultLength === 0) || (searchResultLength <= 50)}
                                 onClick={() => {
                                     search(null, 1, true);
                                 }}
@@ -129,7 +150,7 @@ function App() {
                             <Button
                                 variant="link"
                                 className="p-0 ml-10 custom-button black"
-                                disabled={(searchResultPage === 1) || isSearching || (searchResultLength === 0)}
+                                disabled={(searchResultPage === 1) || isSearching || (searchResultLength === 0) || (searchResultLength <= 50)}
                                 onClick={() => {
                                     search(null, searchResultPage - 1, true);
                                 }}
@@ -138,13 +159,13 @@ function App() {
                             </Button>
                         </Col>
                         <Col xs={8} sm={8} md={8} lg={8}>
-                            {`Found ${searchResultLength.toLocaleString()} search results${searchResultLength > 0 ? ' | Page ' + searchResultPage.toLocaleString() + ' of ' + Math.floor(searchResultLength / 50).toLocaleString() : ''}`}
+                            {`Found ${searchResultLength.toLocaleString()} search results${searchResultLength > 0 ? ' | Page ' + searchResultPage.toLocaleString() + ' of ' + (searchResultLength > 50 ? Math.floor(searchResultLength / 50).toLocaleString() : 1) : ''}`}
                         </Col>
                         <Col xs={2} sm={2} md={2} lg={2} className="text-right">
                             <Button
                                 variant="link"
                                 className="p-0 mr-10 custom-button black"
-                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching || (searchResultLength === 0)}
+                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching || (searchResultLength === 0) || (searchResultLength <= 50)}
                                 onClick={() => {
                                     search(null, searchResultPage + 1, true);
                                 }}
@@ -154,7 +175,7 @@ function App() {
                             <Button
                                 variant="link"
                                 className="p-0 mr-10 custom-button black"
-                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching || (searchResultLength === 0)}
+                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching || (searchResultLength === 0) || (searchResultLength <= 50)}
                                 onClick={() => {
                                     search(null, Math.floor(searchResultLength / 50), true);
                                 }}
