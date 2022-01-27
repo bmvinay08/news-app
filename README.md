@@ -23,3 +23,7 @@ Launches the API server on port 3001.
 
 Runs the UI app.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+### Note
+
+`newsapi.org` token can be changed in server config file `config.js`.
