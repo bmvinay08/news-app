@@ -37,21 +37,22 @@ function App() {
             setNewsErr(err.response.data);
         });
     };
-    const search = (e, isNextPrevPage) => {
+    const search = (e, page, isNextPrevPage) => {
         if (!isNextPrevPage) {
             e && e.preventDefault();
             setIsShowSearchResult(false);
             setSearchResultLength(0);
-            setSearchResultPage(1)
+            setSearchResultPage(1);
         }
         setIsSearching(true);
         setNewsArticles([]);
         setNewsErr(null);
-        axios.get(`${config.API_URL}/news/search?searchText=${searchTxt}&page=${searchResultPage}`).then(searchResult => {
-            if (searchResult && searchResult.data && searchResult.data.articles && Array.isArray(searchResult.data.articles)) {
+        axios.get(`${config.API_URL}/news/search?searchText=${searchTxt}&page=${page}`).then(searchResult => {
+            if (searchResult && searchResult.data && searchResult.data.articles && Array.isArray(searchResult.data.articles) && (searchResult.data.articles.length > 0)) {
                 setIsSearching(false);
                 setIsShowSearchResult(true);
                 setNewsArticles(searchResult.data.articles);
+                setSearchResultPage(page);
                 if (!isNextPrevPage) {
                     setSearchResultLength(searchResult.data.totalResults);
                 }
@@ -60,6 +61,7 @@ function App() {
                 setNewsArticles([]);
                 setIsShowSearchResult(true);
                 setNewsErr('No news articles found!');
+                setSearchResultPage(page);
                 if (!isNextPrevPage) {
                     setSearchResultLength(0);
                 }
@@ -69,6 +71,7 @@ function App() {
             setNewsArticles([]);
             setIsShowSearchResult(true);
             setNewsErr(err.response.data);
+            setSearchResultPage(page);
             if (!isNextPrevPage) {
                 setSearchResultLength(0);
             }
@@ -85,7 +88,7 @@ function App() {
                         <span className="bold">The News</span>
                         <small className="date">{formatDate(new Date())}</small>
                     </Navbar.Brand>
-                    <Form className="d-flex" onSubmit={e => search(e)}>
+                    <Form className="d-flex" onSubmit={e => search(e, 1)}>
                         <FormControl
                             type="search"
                             placeholder="Search News"
@@ -116,10 +119,9 @@ function App() {
                             <Button
                                 variant="link"
                                 className="p-0 ml-10 custom-button black"
-                                disabled={(searchResultPage === 1) || isSearching}
+                                disabled={(searchResultPage === 1) || isSearching || (searchResultLength === 0)}
                                 onClick={() => {
-                                    setSearchResultPage(1);
-                                    search(null, true);
+                                    search(null, 1, true);
                                 }}
                             >
                                 {'<< First'}
@@ -127,26 +129,24 @@ function App() {
                             <Button
                                 variant="link"
                                 className="p-0 ml-10 custom-button black"
-                                disabled={(searchResultPage === 1) || isSearching}
+                                disabled={(searchResultPage === 1) || isSearching || (searchResultLength === 0)}
                                 onClick={() => {
-                                    setSearchResultPage(page => page - 1);
-                                    search(null, true);
+                                    search(null, searchResultPage - 1, true);
                                 }}
                             >
                                 {'< Previous'}
                             </Button>
                         </Col>
                         <Col xs={8} sm={8} md={8} lg={8}>
-                            {`Found ${searchResultLength.toLocaleString()} search results | Page ${searchResultPage.toLocaleString()} of ${Math.floor(searchResultLength / 50).toLocaleString()}`}
+                            {`Found ${searchResultLength.toLocaleString()} search results${searchResultLength > 0 ? ' | Page ' + searchResultPage.toLocaleString() + ' of ' + Math.floor(searchResultLength / 50).toLocaleString() : ''}`}
                         </Col>
                         <Col xs={2} sm={2} md={2} lg={2} className="text-right">
                             <Button
                                 variant="link"
                                 className="p-0 mr-10 custom-button black"
-                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching}
+                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching || (searchResultLength === 0)}
                                 onClick={() => {
-                                    setSearchResultPage(page => page + 1);
-                                    search(null, true);
+                                    search(null, searchResultPage + 1, true);
                                 }}
                             >
                                 {'Next >'}
@@ -154,10 +154,9 @@ function App() {
                             <Button
                                 variant="link"
                                 className="p-0 mr-10 custom-button black"
-                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching}
+                                disabled={(searchResultPage === Math.floor(searchResultLength / 50)) || isSearching || (searchResultLength === 0)}
                                 onClick={() => {
-                                    setSearchResultPage(Math.floor(searchResultLength / 50));
-                                    search(null, true);
+                                    search(null, Math.floor(searchResultLength / 50), true);
                                 }}
                             >
                                 {'Last >>'}
