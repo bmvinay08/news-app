@@ -9,7 +9,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/common.scss';
 import './styles/app.scss';
 
+// Main landing page component - displays latest UK news
 function App() {
+
+    // Default state
     const [isGettingLatestNews, setIsGettingLatestNews] = useState(false);
     const [newsArticles, setNewsArticles] = useState([]);
     const [getNewsErr, setNewsErr] = useState(null);
@@ -18,6 +21,8 @@ function App() {
     const [isShowSearchResult, setIsShowSearchResult] = useState(false);
     const [searchResultLength, setSearchResultLength] = useState(0);
     const [searchResultPage, setSearchResultPage] = useState(1);
+
+    // Get the latest UK news
     const getLatestNews = () => {
         setIsGettingLatestNews(true);
         setNewsArticles([]);
@@ -37,6 +42,8 @@ function App() {
             setNewsErr(err.response.data);
         });
     };
+
+    // Navigate to the home page
     const goToHome = () => {
         setIsGettingLatestNews(false);
         setNewsArticles([]);
@@ -47,6 +54,8 @@ function App() {
         setSearchResultPage(1);
         getLatestNews();
     };
+
+    // Perform search by search text
     const search = (e, page, isNextPrevPage) => {
         if (!isNextPrevPage) {
             e && e.preventDefault();
@@ -87,11 +96,15 @@ function App() {
             }
         });
     };
+
+    // Get latest news on page load
     useEffect(() => {
         getLatestNews();
     }, []);
+
     return (
         <div className="news-app-container">
+            {/* Top navigation bar */}
             <Navbar bg="dark" variant="dark" expand="lg" className="top-navbar">
                 <Container fluid>
                     <Navbar.Brand href="#" onClick={e => {
@@ -99,6 +112,7 @@ function App() {
                         goToHome();
                     }}>
                         <span className="bold">The News</span>
+                        {/* Current date placeholder */}
                         <small className="date">{formatDate(new Date())}</small>
                     </Navbar.Brand>
                     <Nav className="me-auto">
@@ -109,6 +123,7 @@ function App() {
                         Home
                     </Nav.Link>
                     </Nav>
+                    {/* Search box */}
                     <Form className="d-flex" onSubmit={e => search(e, 1)}>
                         <FormControl
                             type="search"
@@ -131,12 +146,14 @@ function App() {
                     </Form>
                 </Container>
             </Navbar>
+            {/* Sub header to display info about the content */}
             <Container fluid className="sub-header text-center p-1 bold">
                 {!isShowSearchResult && !isSearching && 'LATEST NEWS FROM UK'}
                 {!isShowSearchResult && isSearching && 'Searching ...'}
                 {((isShowSearchResult && !isSearching) || (isShowSearchResult && isSearching)) && (
                     <Row>
                         <Col xs={2} sm={2} md={2} lg={2} className="text-left">
+                            {/* First and previous navigation links */}
                             <Button
                                 variant="link"
                                 className="p-0 ml-10 custom-button black"
@@ -162,6 +179,7 @@ function App() {
                             {`Found ${searchResultLength.toLocaleString()} search results${searchResultLength > 0 ? ' | Page ' + searchResultPage.toLocaleString() + ' of ' + (searchResultLength > 50 ? Math.floor(searchResultLength / 50).toLocaleString() : 1) : ''}`}
                         </Col>
                         <Col xs={2} sm={2} md={2} lg={2} className="text-right">
+                            {/* Next and last navigation links */}
                             <Button
                                 variant="link"
                                 className="p-0 mr-10 custom-button black"
@@ -186,6 +204,7 @@ function App() {
                     </Row>
                 )}
             </Container>
+            {/* Main content to display latest news and search results */}
             <Container fluid className="main-content pt-3">
                 {getNewsErr && (
                     <div className="text-center">{getNewsErr}</div>
