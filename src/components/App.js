@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react';
 import { Navbar, Container, Form, FormControl, Button, Spinner, Row, Col, Nav } from 'react-bootstrap';
 import axios from 'axios';
 import NewsCards from './NewsCards';
-import config from './config.js';
-import {formatDate} from './util.js';
+import config from '../helpers/config.js';
+import {formatDate} from '../helpers/util.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/common.scss';
-import './styles/app.scss';
+import '../styles/common.scss';
+import '../styles/app.scss';
 
 // Main landing page component - displays latest UK news
 function App() {

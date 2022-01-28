@@ -15,7 +15,7 @@ In the project directory, run:
 
 Downloads the dependencies from the npm repository.
 
-### `node server.js`
+### `node server/server.js`
 
 Launches the API server on port 3001.
 
@@ -26,4 +26,4 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ## Note
 
-`newsapi.org` token can be changed in the server config file `config.js`.
+`newsapi.org` token can be changed in the server config file `server/config.js`.

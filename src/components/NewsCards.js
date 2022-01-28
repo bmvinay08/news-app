@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
-import {formatDate} from './util.js';
+import {formatDate} from '../helpers/util.js';
 
-import './styles/news-cards.scss';
+import '../styles/news-cards.scss';
 
 // News article cards reusable component
 function NewsCards(props) {
